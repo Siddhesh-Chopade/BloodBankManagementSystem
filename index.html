@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Blood Bank and Donor Management System Portal">
+<title>LifeLine Blood Bank Portal</title>
+<style>
+:root{--red:#c62828;--red2:#ef5350;--dark:#17202a;--muted:#64748b;--bg:#f5f7fb;--card:#fff;--line:#e5e7eb;--green:#15803d;--orange:#c2410c;--blue:#2563eb}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:#17202a}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app{display:flex;min-height:100vh}
+.sidebar{width:250px;background:linear-gradient(180deg,#8e1717,#3d0808);color:#fff;padding:22px 14px;position:fixed;inset:0 auto 0 0;z-index:5}
+.brand{font-weight:800;font-size:21px;padding:8px 10px 24px}.brand small{display:block;font-weight:400;opacity:.75;font-size:11px;margin-top:4px}
+.nav button{display:block;width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:12px 13px;border-radius:9px;margin:3px 0;opacity:.9}.nav button:hover,.nav button.active{background:rgba(255,255,255,.15);opacity:1}
+.main{margin-left:250px;width:calc(100% - 250px)}.topbar{height:66px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:4}.role{background:#fff1f1;color:#991b1b;padding:7px 11px;border-radius:20px;font-size:12px;font-weight:700}
+.content{padding:28px;max-width:1500px;margin:auto}.page{display:none}.page.active{display:block}.page-title{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.page-title h1{margin:0;font-size:27px}.sub{color:var(--muted);font-size:13px;margin-top:5px}
+.grid{display:grid;gap:16px}.cards{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 3px 14px rgba(15,23,42,.04)}.stat{display:flex;justify-content:space-between;align-items:center}.stat .num{font-size:28px;font-weight:800;margin-top:7px}.stat .ico{width:44px;height:44px;border-radius:12px;background:#fff0f0;color:var(--red);display:grid;place-items:center;font-size:20px}
+.two{grid-template-columns:1.25fr .75fr}.three{grid-template-columns:repeat(3,1fr)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.toolbar input,.toolbar select,.form input,.form select,.form textarea{border:1px solid #d6dbe3;border-radius:9px;padding:10px 12px;background:#fff;outline:none}.toolbar input:focus,.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--red2);box-shadow:0 0 0 3px #fee2e2}
+.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:700}.primary{background:var(--red);color:#fff}.secondary{background:#eef2f7;color:#243244}.success{background:#dcfce7;color:#166534}.danger{background:#fee2e2;color:#991b1b}.outline{background:#fff;border:1px solid #d7dce4;color:#273449}
+.table-wrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:12px}.table{width:100%;border-collapse:collapse;min-width:720px}.table th,.table td{padding:12px 14px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px}.table th{background:#fafafa;color:#475569;font-size:12px}.table tr:last-child td{border-bottom:0}
+.badge{display:inline-flex;padding:4px 8px;border-radius:20px;font-size:11px;font-weight:700}.available,.approved,.completed{background:#dcfce7;color:#166534}.pending{background:#fef3c7;color:#92400e}.rejected,.expired{background:#fee2e2;color:#991b1b}.scheduled{background:#dbeafe;color:#1d4ed8}
+.chart{height:220px;display:flex;align-items:end;gap:12px;padding:20px 12px 5px}.bar{flex:1;background:linear-gradient(180deg,#ef5350,#a31616);border-radius:7px 7px 0 0;min-width:25px;position:relative}.bar span{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:10px;color:#64748b}.bar b{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px}
+.progress{height:9px;background:#edf0f4;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:var(--red);border-radius:20px}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;font-weight:700;color:#475569}.full{grid-column:1/-1}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.show{display:flex}.modal-box{background:#fff;border-radius:15px;width:min(720px,100%);max-height:90vh;overflow:auto;padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modal-head h2{margin:0}.close{border:0;background:#f1f5f9;border-radius:50%;width:34px;height:34px}
+.alert{padding:12px 14px;border-radius:10px;margin:8px 0;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}.empty{padding:30px;text-align:center;color:#64748b}
+.hero{background:linear-gradient(120deg,#7f1010,#d32f2f);color:#fff;border-radius:18px;padding:28px;margin-bottom:20px}.hero h2{margin:0 0 8px;font-size:30px}.hero p{margin:0;opacity:.9}.quick{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.auth{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at top,#ffe5e5,#f5f7fb 55%);padding:20px}.authbox{width:min(430px,100%);background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px;box-shadow:0 15px 50px rgba(0,0,0,.08)}.authbox h1{margin:0 0 5px}.authbox p{color:#64748b;font-size:13px}.authbox .field{margin:12px 0}.demo{background:#fff7ed;border:1px solid #fed7aa;padding:10px;border-radius:9px;font-size:12px;margin:15px 0}
+.toast{position:fixed;right:22px;bottom:22px;background:#17202a;color:#fff;padding:12px 16px;border-radius:9px;display:none;z-index:50}.toast.show{display:block}
+@media(max-width:1050px){.cards{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.sidebar{width:215px}.main{margin-left:215px;width:calc(100% - 215px)}}
+@media(max-width:700px){.sidebar{position:static;width:100%;height:auto}.app{display:block}.main{margin:0;width:100%}.nav{display:grid;grid-template-columns:repeat(2,1fr)}.topbar{padding:0 16px}.content{padding:16px}.cards,.three,.form-grid{grid-template-columns:1fr}.page-title{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div id="auth" class="auth">
+  <div class="authbox">
+    <h1>🩸 LifeLine</h1><p>Blood Bank & Donor Management Portal</p>
+    <div class="demo"><b>Demo login:</b> admin@lifeline.test / admin123<br>Donor: donor@lifeline.test / donor123<br>Hospital: hospital@lifeline.test / hospital123</div>
+    <form id="loginForm" class="form">
+      <div class="field"><label>Email</label><input id="loginEmail" type="email" required value="admin@lifeline.test"></div>
+      <div class="field"><label>Password</label><input id="loginPassword" type="password" required value="admin123"></div>
+      <button class="btn primary" style="width:100%">Sign In</button>
+    </form>
+  </div>
+</div>
+
+<div id="app" class="app" style="display:none">
+<aside class="sidebar">
+  <div class="brand">🩸 LifeLine <small>Blood Bank Management</small></div>
+  <nav class="nav" id="nav"></nav>
+  <button class="btn" style="margin:18px 10px;width:calc(100% - 20px);background:#fff;color:#7f1010" onclick="logout()">Logout</button>
+</aside>
+<main class="main">
+<header class="topbar"><strong id="pageLabel">Dashboard</strong><span class="role" id="roleLabel"></span></header>
+<section class="content">
+  <div id="dashboard" class="page active"></div>
+  <div id="donors" class="page"></div>
+  <div id="inventory" class="page"></div>
+  <div id="requests" class="page"></div>
+  <div id="appointments" class="page"></div>
+  <div id="hospitals" class="page"></div>
+  <div id="camps" class="page"></div>
+  <div id="notifications" class="page"></div>
+  <div id="reports" class="page"></div>
+  <div id="profile" class="page"></div>
+</section>
+</main></div>
+
+<div id="modal" class="modal"><div class="modal-box"><div class="modal-head"><h2 id="modalTitle"></h2><button class="close" onclick="closeModal()">×</button></div><div id="modalBody"></div></div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+const KEY="lifeline_blood_bank_v1";
+const initial={
+ users:[
+  {id:1,name:"System Administrator",email:"admin@lifeline.test",password:"admin123",role:"Admin"},
+  {id:2,name:"Aarav Patil",email:"donor@lifeline.test",password:"donor123",role:"Donor",blood:"O+",city:"Pune",phone:"9876543210",eligible:true,lastDonation:"2026-07-18"},
+  {id:3,name:"CityCare Hospital",email:"hospital@lifeline.test",password:"hospital123",role:"Hospital",city:"Pune",phone:"020-5550123"}
+ ],
+ donors:[
+  {id:101,name:"Aarav Patil",blood:"O+",city:"Pune",phone:"9876543210",email:"donor@lifeline.test",eligible:true,lastDonation:"2026-07-18",donations:6},
+  {id:102,name:"Sneha Joshi",blood:"A+",city:"Mumbai",phone:"9876501234",email:"sneha@example.test",eligible:true,lastDonation:"2026-08-02",donations:4},
+  {id:103,name:"Rohan Kulkarni",blood:"B+",city:"Pune",phone:"9876512345",email:"rohan@example.test",eligible:false,lastDonation:"2026-05-01",donations:8},
+  {id:104,name:"Meera Shah",blood:"AB+",city:"Nashik",phone:"9876523456",email:"meera@example.test",eligible:true,lastDonation:"2026-06-22",donations:3},
+  {id:105,name:"Vikram More",blood:"O-",city:"Pune",phone:"9876534567",email:"vikram@example.test",eligible:true,lastDonation:"2026-08-11",donations:10}
+ ],
+ inventory:[
+  {blood:"A+",units:32,expiry:"2026-10-12"},{blood:"A-",units:9,expiry:"2026-10-04"},
+  {blood:"B+",units:27,expiry:"2026-10-20"},{blood:"B-",units:7,expiry:"2026-10-02"},
+  {blood:"AB+",units:14,expiry:"2026-10-18"},{blood:"AB-",units:4,expiry:"2026-10-01"},
+  {blood:"O+",units:58,expiry:"2026-11-02"},{blood:"O-",units:6,expiry:"2026-10-08"}
+ ],
+ requests:[
+  {id:501,hospital:"CityCare Hospital",patient:"Riya Sharma",blood:"O+",units:3,urgency:"Emergency",status:"Pending",date:"2026-09-28"},
+  {id:502,hospital:"Metro Health Centre",patient:"Kabir Rao",blood:"A+",units:2,urgency:"Normal",status:"Approved",date:"2026-09-27"},
+  {id:503,hospital:"CityCare Hospital",patient:"Neha Jain",blood:"B-",units:2,urgency:"Urgent",status:"Rejected",date:"2026-09-25"}
+ ],
+ appointments:[
+  {id:601,donor:"Aarav Patil",blood:"O+",date:"2026-10-03",time:"10:00",location:"LifeLine Pune",status:"Scheduled"},
+  {id:602,donor:"Sneha Joshi",blood:"A+",date:"2026-09-29",time:"11:30",location:"LifeLine Mumbai",status:"Scheduled"}
+ ],
+ hospitals:[
+  {id:701,name:"CityCare Hospital",city:"Pune",phone:"020-5550123",email:"hospital@lifeline.test",status:"Active"},
+  {id:702,name:"Metro Health Centre",city:"Mumbai",phone:"022-5550144",email:"metro@example.test",status:"Active"}
+ ],
+ camps:[
+  {id:801,name:"Community Lifeline Camp",date:"2026-10-12",city:"Pune",venue:"Community Hall",slots:80,registered:46,status:"Open"},
+  {id:802,name:"University Donation Drive",date:"2026-10-20",city:"Nashik",venue:"University Ground",slots:120,registered:75,status:"Open"}
+ ],
+ notifications:[
+  {id:901,text:"Emergency O+ request requires admin review.",type:"Blood Request",date:"2026-09-28",read:false},
+  {id:902,text:"A- stock is below the recommended threshold.",type:"Low Stock",date:"2026-09-28",read:false},
+  {id:903,text:"Aarav Patil has an appointment on 03 Oct 2026.",type:"Appointment",date:"2026-09-28",read:true}
+ ]
+};
+let db=JSON.parse(localStorage.getItem(KEY)||"null")||initial;
+let current=null, currentPage="dashboard";
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function toast(s){const t=document.getElementById("toast");t.textContent=s;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function money(n){return n}
+function login(e){e.preventDefault();const em=loginEmail.value.trim().toLowerCase(),pw=loginPassword.value;const u=db.users.find(x=>x.email.toLowerCase()===em&&x.password===pw);if(!u)return toast("Invalid demo credentials.");current=u;auth.style.display="none";app.style.display="flex";roleLabel.textContent=u.role;buildNav();showPage("dashboard")}
+function logout(){current=null;app.style.display="none";auth.style.display="grid"}
+loginForm.addEventListener("submit",login);
+function buildNav(){
+ let items=[["dashboard","Dashboard","▦"],["donors","Donors","👥"],["inventory","Blood Inventory","🩸"],["requests","Blood Requests","📋"],["appointments","Appointments","📅"],["hospitals","Hospitals","🏥"],["camps","Blood Camps","⛑"],["notifications","Notifications","🔔"],["reports","Reports","📊"],["profile","Profile","⚙"]];
+ if(current.role==="Donor")items=items.filter(x=>["dashboard","appointments","notifications","profile"].includes(x[0]));
+ if(current.role==="Hospital")items=items.filter(x=>["dashboard","requests","notifications","profile"].includes(x[0]));
+ nav.innerHTML=items.map(x=>`<button data-page="${x[0]}" onclick="showPage('${x[0]}')">${x[2]} &nbsp; ${x[1]}</button>`).join("");
+}
+function showPage(p){currentPage=p;document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(p).classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));pageLabel.textContent=p[0].toUpperCase()+p.slice(1);render(p)}
+function render(p){
+ const f={dashboard:renderDashboard,donors:renderDonors,inventory:renderInventory,requests:renderRequests,appointments:renderAppointments,hospitals:renderHospitals,camps:renderCamps,notifications:renderNotifications,reports:renderReports,profile:renderProfile}[p];if(f)f()
+}
+function renderDashboard(){
+ const totalUnits=db.inventory.reduce((a,x)=>a+x.units,0), pending=db.requests.filter(x=>x.status==="Pending").length, completed=db.appointments.filter(x=>x.status==="Completed").length;
+ dashboard.innerHTML=`<div class="hero"><h2>Welcome back, ${esc(current.name)}</h2><p>Coordinate donors, blood stock, requests and appointments from one portal.</p><div class="quick"><button class="btn" style="background:#fff;color:#8e1717" onclick="showPage('requests')">View Requests</button><button class="btn" style="background:#fff;color:#8e1717" onclick="showPage('inventory')">Check Stock</button></div></div>
+ <div class="grid cards">${[
+ ["👥","Total Donors",db.donors.length],["🩸","Blood Units",totalUnits],["📋","Pending Requests",pending],["📅","Appointments",db.appointments.length]
+ ].map(x=>`<div class="card stat"><div><small>${x[1]}</small><div class="num">${x[2]}</div></div><div class="ico">${x[0]}</div></div>`).join("")}</div>
+ <div class="grid two"><div class="card"><h3>Blood Group Distribution</h3><div class="chart">${db.inventory.map(x=>`<div class="bar" style="height:${Math.max(18,Math.min(180,x.units*2.2))}px"><b>${x.units}</b><span>${x.blood}</span></div>`).join("")}</div></div>
+ <div class="card"><h3>Low Stock Alerts</h3>${db.inventory.filter(x=>x.units<10).map(x=>`<div class="alert"><b>${x.blood}</b> has only ${x.units} units remaining.</div>`).join("")||'<div class="empty">No low-stock groups.</div>'}</div></div>
+ <div class="card" style="margin-top:16px"><h3>Recent Activities</h3>${db.notifications.slice(0,5).map(n=>`<div style="padding:10px 0;border-bottom:1px solid #eee"><b>${esc(n.type)}</b> — ${esc(n.text)} <small style="float:right;color:#64748b">${n.date}</small></div>`).join("")}</div>`;
+}
+function renderDonors(){
+ if(current.role!=="Admin"){donors.innerHTML='<div class="card"><h2>Donor access</h2><p>Donor records are managed by authorized administrators.</p></div>';return}
+ donors.innerHTML=`<div class="page-title"><div><h1>Donor Management</h1><div class="sub">Create, search, edit and review donor eligibility.</div></div><button class="btn primary" onclick="openDonor()">+ Add Donor</button></div>
+ <div class="toolbar"><input id="donorSearch" placeholder="Search name, city, blood group..." oninput="filterDonors()"><select id="bloodFilter" onchange="filterDonors()"><option value="">All blood groups</option>${["A+","A-","B+","B-","AB+","AB-","O+","O-"].map(x=>`<option>${x}</option>`).join("")}</select></div>
+ <div class="table-wrap"><table class="table"><thead><tr><th>Name</th><th>Blood</th><th>City</th><th>Contact</th><th>Eligibility</th><th>Donations</th><th>Actions</th></tr></thead><tbody id="donorRows"></tbody></table></div>`;
+ filterDonors()
+}
+function filterDonors(){const q=(document.getElementById("donorSearch")?.value||"").toLowerCase(),b=document.getElementById("bloodFilter")?.value||"";const a=db.donors.filter(x=>(!q||[x.name,x.city,x.blood,x.email].join(" ").toLowerCase().includes(q))&&(!b||x.blood===b));donorRows.innerHTML=a.map(x=>`<tr><td><b>${esc(x.name)}</b><br><small>${esc(x.email)}</small></td><td><b>${x.blood}</b></td><td>${esc(x.city)}</td><td>${esc(x.phone)}</td><td><span class="badge ${x.eligible?'available':'rejected'}">${x.eligible?'Eligible':'Not eligible'}</span></td><td>${x.donations||0}</td><td><button class="btn secondary" onclick="openDonor(${x.id})">Edit</button> <button class="btn danger" onclick="deleteDonor(${x.id})">Delete</button></td></tr>`).join("")||'<tr><td colspan="7" class="empty">No donors found.</td></tr>'}
+function openDonor(id){const x=db.donors.find(d=>d.id===id)||{id:null,name:"",blood:"O+",city:"",phone:"",email:"",eligible:true,lastDonation:"",donations:0};modalTitle.textContent=id?"Edit Donor":"Add Donor";modalBody.innerHTML=`<form class="form" onsubmit="saveDonor(event,${id||"null"})"><div class="form-grid"><div class="field"><label>Full Name</label><input id="fName" required value="${esc(x.name)}"></div><div class="field"><label>Email</label><input id="fEmail" type="email" required value="${esc(x.email)}"></div><div class="field"><label>Blood Group</label><select id="fBlood">${["A+","A-","B+","B-","AB+","AB-","O+","O-"].map(b=>`<option ${b===x.blood?"selected":""}>${b}</option>`).join("")}</select></div><div class="field"><label>City</label><input id="fCity" required value="${esc(x.city)}"></div><div class="field"><label>Phone</label><input id="fPhone" required value="${esc(x.phone)}"></div><div class="field"><label>Last Donation</label><input id="fLast" type="date" value="${x.lastDonation||""}"></div><div class="field"><label>Eligibility</label><select id="fEligible"><option value="true" ${x.eligible?"selected":""}>Eligible</option><option value="false" ${!x.eligible?"selected":""}>Not eligible</option></select></div></div><br><button class="btn primary">Save Donor</button></form>`;openModal()}
+function saveDonor(e,id){e.preventDefault();const x={id:id||Date.now(),name:fName.value,email:fEmail.value,blood:fBlood.value,city:fCity.value,phone:fPhone.value,eligible:fEligible.value==="true",lastDonation:fLast.value,donations:id?(db.donors.find(d=>d.id===id)?.donations||0):0};if(id)Object.assign(db.donors.find(d=>d.id===id),x);else db.donors.push(x);save();closeModal();render("donors");toast("Donor saved successfully.")}
+function deleteDonor(id){if(confirm("Delete this donor?")){db.donors=db.donors.filter(x=>x.id!==id);save();render("donors");toast("Donor deleted.")}}
+function renderInventory(){inventory.innerHTML=`<div class="page-title"><div><h1>Blood Inventory</h1><div class="sub">Track units, expiry dates and low-stock conditions.</div></div>${current.role==="Admin"?'<button class="btn primary" onclick="openStock()">+ Add Stock</button>':''}</div><div class="grid cards">${db.inventory.map(x=>`<div class="card"><div class="stat"><div><small>${x.blood}</small><div class="num">${x.units}</div><small>units</small></div><div class="ico">🩸</div></div><div style="margin-top:12px" class="progress"><i style="width:${Math.min(100,x.units/0.6)}%"></i></div><small style="display:block;margin-top:8px;color:${x.units<10?'#b91c1c':'#64748b'}">Expiry: ${x.expiry} ${x.units<10?' • LOW STOCK':''}</small></div>`).join("")}</div><div class="card"><h3>Inventory Register</h3><div class="table-wrap"><table class="table"><thead><tr><th>Blood Group</th><th>Units</th><th>Expiry</th><th>Status</th>${current.role==="Admin"?'<th>Action</th>':''}</tr></thead><tbody>${db.inventory.map(x=>`<tr><td><b>${x.blood}</b></td><td>${x.units}</td><td>${x.expiry}</td><td><span class="badge ${x.units<10?'pending':'available'}">${x.units<10?'Low Stock':'Available'}</span></td>${current.role==="Admin"?`<td><button class="btn secondary" onclick="openStock('${x.blood}')">Update</button></td>`:""}</tr>`).join("")}</tbody></table></div></div>`}
+function openStock(blood){const x=db.inventory.find(i=>i.blood===blood)||{blood:"A+",units:0,expiry:""};modalTitle.textContent="Update Blood Stock";modalBody.innerHTML=`<form class="form" onsubmit="saveStock(event)"><div class="form-grid"><div class="field"><label>Blood Group</label><select id="sBlood">${["A+","A-","B+","B-","AB+","AB-","O+","O-"].map(b=>`<option ${b===x.blood?"selected":""}>${b}</option>`).join("")}</select></div><div class="field"><label>Units</label><input id="sUnits" type="number" min="0" required value="${x.units}"></div><div class="field"><label>Expiry Date</label><input id="sExpiry" type="date" required value="${x.expiry}"></div></div><br><button class="btn primary">Save Stock</button></form>`;openModal()}
+function saveStock(e){e.preventDefault();const x=db.inventory.find(i=>i.blood===sBlood.value);if(x){x.units=+sUnits.value;x.expiry=sExpiry.value}else db.inventory.push({blood:sBlood.value,units:+sUnits.value,expiry:sExpiry.value});save();closeModal();render("inventory");toast("Blood inventory updated.")}
+function renderRequests(){let arr=db.requests;if(current.role==="Hospital"){arr=arr.filter(x=>x.hospital===current.name)}requests.innerHTML=`<div class="page-title"><div><h1>Blood Requests</h1><div class="sub">Track requests, urgency, approval and inventory impact.</div></div>${current.role!=="Admin"?'<button class="btn primary" onclick="openRequest()">+ New Blood Request</button>':''}</div><div class="toolbar"><select id="reqStatus" onchange="renderRequests()"><option value="">All statuses</option><option>Pending</option><option>Approved</option><option>Rejected</option></select><select id="reqBlood" onchange="renderRequests()"><option value="">All groups</option>${["A+","A-","B+","B-","AB+","AB-","O+","O-"].map(x=>`<option>${x}</option>`).join("")}</select></div><div class="table-wrap"><table class="table"><thead><tr><th>Request</th><th>Hospital</th><th>Blood</th><th>Units</th><th>Urgency</th><th>Status</th><th>Action</th></tr></thead><tbody>${arr.filter(x=>(!reqStatus?.value||x.status===reqStatus.value)&&(!reqBlood?.value||x.blood===reqBlood.value)).map(x=>`<tr><td>#${x.id}<br><small>${esc(x.patient)} • ${x.date}</small></td><td>${esc(x.hospital)}</td><td><b>${x.blood}</b></td><td>${x.units}</td><td><span class="badge ${x.urgency==='Emergency'?'rejected':x.urgency==='Urgent'?'pending':'scheduled'}">${x.urgency}</span></td><td><span class="badge ${x.status.toLowerCase()}">${x.status}</span></td><td>${current.role==="Admin"&&x.status==="Pending"?`<button class="btn success" onclick="updateRequest(${x.id},'Approved')">Approve</button> <button class="btn danger" onclick="updateRequest(${x.id},'Rejected')">Reject</button>`:"—"}</td></tr>`).join("")||'<tr><td colspan="7" class="empty">No requests.</td></tr>'}</tbody></table></div>`}
+function openRequest(){modalTitle.textContent="Create Blood Request";modalBody.innerHTML=`<form class="form" onsubmit="saveRequest(event)"><div class="form-grid"><div class="field"><label>Patient Name</label><input id="rPatient" required></div><div class="field"><label>Blood Group</label><select id="rBlood">${["A+","A-","B+","B-","AB+","AB-","O+","O-"].map(x=>`<option>${x}</option>`).join("")}</select></div><div class="field"><label>Units</label><input id="rUnits" type="number" min="1" required value="1"></div><div class="field"><label>Urgency</label><select id="rUrgency"><option>Normal</option><option>Urgent</option><option>Emergency</option></select></div></div><br><button class="btn primary">Submit Request</button></form>`;openModal()}
+function saveRequest(e){e.preventDefault();db.requests.unshift({id:Date.now(),hospital:current.name,patient:rPatient.value,blood:rBlood.value,units:+rUnits.value,urgency:rUrgency.value,status:"Pending",date:new Date().toISOString().slice(0,10)});db.notifications.unshift({id:Date.now()+1,text:`New ${rUrgency.value.toLowerCase()} ${rBlood.value} request submitted by ${current.name}.`,type:"Blood Request",date:new Date().toISOString().slice(0,10),read:false});save();closeModal();render("requests");toast("Blood request submitted.")}
+function updateRequest(id,status){const r=db.requests.find(x=>x.id===id);if(!r)return;if(status==="Approved"){const s=db.inventory.find(x=>x.blood===r.blood);if(!s||s.units<r.units)return toast("Insufficient blood stock for approval.");s.units-=r.units}r.status=status;db.notifications.unshift({id:Date.now(),text:`Request #${r.id} was ${status.toLowerCase()}.`,type:"Blood Request",date:new Date().toISOString().slice(0,10),read:false});save();render("requests");toast(`Request ${status.toLowerCase()}.`)}
+function renderAppointments(){let a=db.appointments;if(current.role==="Donor")a=a.filter(x=>x.donor===current.name);appointments.innerHTML=`<div class="page-title"><div><h1>Appointments</h1><div class="sub">Schedule and track blood donation appointments.</div></div>${current.role!=="Admin"||true?'<button class="btn primary" onclick="openAppointment()">+ Schedule Donation</button>':''}</div><div class="table-wrap"><table class="table"><thead><tr><th>Donor</th><th>Blood</th><th>Date</th><th>Time</th><th>Location</th><th>Status</th><th>Action</th></tr></thead><tbody>${a.map(x=>`<tr><td>${esc(x.donor)}</td><td>${x.blood}</td><td>${x.date}</td><td>${x.time}</td><td>${esc(x.location)}</td><td><span class="badge ${x.status.toLowerCase()}">${x.status}</span></td><td>${x.status==="Scheduled"?`<button class="btn danger" onclick="cancelAppointment(${x.id})">Cancel</button>`:"—"}</td></tr>`).join("")||'<tr><td colspan="7" class="empty">No appointments.</td></tr>'}</tbody></table></div>`}
+function openAppointment(){modalTitle.textContent="Schedule Donation";modalBody.innerHTML=`<form class="form" onsubmit="saveAppointment(event)"><div class="form-grid"><div class="field"><label>Donor</label><select id="aDonor">${db.donors.map(x=>`<option ${x.name===current.name?"selected":""}>${esc(x.name)}</option>`).join("")}</select></div><div class="field"><label>Blood Group</label><select id="aBlood">${["A+","A-","B+","B-","AB+","AB-","O+","O-"].map(x=>`<option>${x}</option>`).join("")}</select></div><div class="field"><label>Date</label><input id="aDate" type="date" required></div><div class="field"><label>Time</label><input id="aTime" type="time" required></div><div class="field full"><label>Location</label><input id="aLoc" required value="LifeLine Donation Centre"></div></div><br><button class="btn primary">Book Appointment</button></form>`;openModal()}
+function saveAppointment(e){e.preventDefault();db.appointments.push({id:Date.now(),donor:aDonor.value,blood:aBlood.value,date:aDate.value,time:aTime.value,location:aLoc.value,status:"Scheduled"});db.notifications.unshift({id:Date.now()+2,text:`Donation appointment booked for ${aDonor.value} on ${aDate.value}.`,type:"Appointment",date:new Date().toISOString().slice(0,10),read:false});save();closeModal();render("appointments");toast("Appointment booked.")}
+function cancelAppointment(id){if(confirm("Cancel appointment?")){const x=db.appointments.find(a=>a.id===id);if(x)x.status="Cancelled";save();render("appointments");toast("Appointment cancelled.")}}
+function renderHospitals(){hospitals.innerHTML=`<div class="page-title"><div><h1>Hospital Management</h1><div class="sub">Registered hospitals and contact details.</div></div>${current.role==="Admin"?'<button class="btn primary" onclick="openHospital()">+ Add Hospital</button>':''}</div><div class="grid three">${db.hospitals.map(h=>`<div class="card"><h3>🏥 ${esc(h.name)}</h3><p>${esc(h.city)}<br>${esc(h.phone)}<br>${esc(h.email)}</p><span class="badge available">${h.status}</span></div>`).join("")}</div>`}
+function openHospital(){modalTitle.textContent="Add Hospital";modalBody.innerHTML=`<form class="form" onsubmit="saveHospital(event)"><div class="form-grid"><div class="field"><label>Hospital Name</label><input id="hName" required></div><div class="field"><label>City</label><input id="hCity" required></div><div class="field"><label>Phone</label><input id="hPhone" required></div><div class="field"><label>Email</label><input id="hEmail" type="email" required></div></div><br><button class="btn primary">Save Hospital</button></form>`;openModal()}
+function saveHospital(e){e.preventDefault();db.hospitals.push({id:Date.now(),name:hName.value,city:hCity.value,phone:hPhone.value,email:hEmail.value,status:"Active"});save();closeModal();render("hospitals");toast("Hospital added.")}
+function renderCamps(){camps.innerHTML=`<div class="page-title"><div><h1>Blood Camps</h1><div class="sub">Plan community donation drives and track registrations.</div></div>${current.role==="Admin"?'<button class="btn primary" onclick="openCamp()">+ Create Camp</button>':''}</div><div class="grid two">${db.camps.map(c=>`<div class="card"><div class="stat"><h3>⛑ ${esc(c.name)}</h3><span class="badge available">${c.status}</span></div><p><b>${c.date}</b> • ${esc(c.city)}<br>${esc(c.venue)}</p><div class="progress"><i style="width:${Math.round(c.registered/c.slots*100)}%"></i></div><small>${c.registered}/${c.slots} registrations</small></div>`).join("")}</div>`}
+function openCamp(){modalTitle.textContent="Create Blood Camp";modalBody.innerHTML=`<form class="form" onsubmit="saveCamp(event)"><div class="form-grid"><div class="field"><label>Camp Name</label><input id="cName" required></div><div class="field"><label>Date</label><input id="cDate" type="date" required></div><div class="field"><label>City</label><input id="cCity" required></div><div class="field"><label>Venue</label><input id="cVenue" required></div><div class="field"><label>Total Slots</label><input id="cSlots" type="number" min="1" required value="50"></div></div><br><button class="btn primary">Create Camp</button></form>`;openModal()}
+function saveCamp(e){e.preventDefault();db.camps.push({id:Date.now(),name:cName.value,date:cDate.value,city:cCity.value,venue:cVenue.value,slots:+cSlots.value,registered:0,status:"Open"});save();closeModal();render("camps");toast("Blood camp created.")}
+function renderNotifications(){notifications.innerHTML=`<div class="page-title"><div><h1>Notifications</h1><div class="sub">Appointment reminders, blood request updates and low-stock alerts.</div></div><button class="btn secondary" onclick="markAllRead()">Mark all read</button></div><div class="card">${db.notifications.map(n=>`<div style="padding:15px 5px;border-bottom:1px solid #eee;opacity:${n.read?.65:1}"><span class="badge ${n.type==='Low Stock'?'pending':n.type==='Blood Request'?'scheduled':'available'}">${n.type}</span> <b>${n.text}</b><small style="float:right">${n.date}</small></div>`).join("")||'<div class="empty">No notifications.</div>'}</div>`}
+function markAllRead(){db.notifications.forEach(n=>n.read=true);save();render("notifications");toast("Notifications marked as read.")}
+function renderReports(){reports.innerHTML=`<div class="page-title"><div><h1>Reports & Analytics</h1><div class="sub">Generate printable reports and export operational data as CSV.</div></div></div><div class="grid three"><div class="card"><h3>Donor Report</h3><p>${db.donors.length} donor records</p><button class="btn primary" onclick="exportCSV('donors')">Export CSV</button></div><div class="card"><h3>Blood Stock Report</h3><p>${db.inventory.reduce((a,x)=>a+x.units,0)} total units</p><button class="btn primary" onclick="exportCSV('inventory')">Export CSV</button></div><div class="card"><h3>Request Report</h3><p>${db.requests.length} requests</p><button class="btn primary" onclick="exportCSV('requests')">Export CSV</button></div></div><div class="card" style="margin-top:16px"><h3>Request Statistics</h3><div class="grid three"><div><b>Pending</b><div class="num">${db.requests.filter(x=>x.status==="Pending").length}</div></div><div><b>Approved</b><div class="num">${db.requests.filter(x=>x.status==="Approved").length}</div></div><div><b>Rejected</b><div class="num">${db.requests.filter(x=>x.status==="Rejected").length}</div></div></div></div><div class="card" style="margin-top:16px"><button class="btn secondary" onclick="window.print()">Print / Save PDF</button> <button class="btn secondary" onclick="downloadBackup()">Download JSON Backup</button></div>`}
+function exportCSV(type){let rows=db[type];let headers=Object.keys(rows[0]||{});let csv=[headers.join(","),...rows.map(r=>headers.map(h=>`"${String(r[h]??"").replaceAll('"','""')}"`).join(","))].join("\\n");downloadFile(type+"_report.csv",csv,"text/csv");toast("CSV report exported.")}
+function downloadBackup(){downloadFile("lifeline-backup.json",JSON.stringify(db,null,2),"application/json")}
+function downloadFile(name,data,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function renderProfile(){profile.innerHTML=`<div class="page-title"><div><h1>Profile & Settings</h1><div class="sub">Current account and portal preferences.</div></div></div><div class="card"><div class="form-grid"><div><b>Name</b><p>${esc(current.name)}</p></div><div><b>Email</b><p>${esc(current.email)}</p></div><div><b>Role</b><p><span class="badge scheduled">${current.role}</span></p></div><div><b>Security</b><p>Session-based demo authentication</p></div></div></div><div class="card" style="margin-top:16px"><h3>Production integration notes</h3><ul><li>Replace demo localStorage persistence with PHP controllers and MySQL queries.</li><li>Use PHP password_hash/password_verify and secure server sessions.</li><li>Validate all permissions server-side for Admin, Donor and Hospital roles.</li><li>Use prepared statements for all database operations.</li></ul></div>`}
+function openModal(){modal.classList.add("show")}function closeModal(){modal.classList.remove("show")}modal.addEventListener("click",e=>{if(e.target===modal)closeModal()})
+</script>
+</body>
+</html>
